@@ -24,4 +24,24 @@ const getUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-module.exports = { createUser, getUsers, getUser };
+const setUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => res.status(200).send({ user }))
+    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
+const setAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .then((user) => res.status(200).send({ user }))
+    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
+module.exports = {
+  createUser,
+  getUsers,
+  getUser,
+  setUserInfo,
+  setAvatar,
+};
