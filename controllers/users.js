@@ -24,6 +24,7 @@ const getUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
+//  изменить данные пользователя
 const setUserInfo = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -31,6 +32,7 @@ const setUserInfo = (req, res) => {
     .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
+//  изменить аватар
 const setAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
