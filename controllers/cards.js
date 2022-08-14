@@ -6,7 +6,7 @@ const createCard = (req, res) => {
   const owner = req.user._id;
   return Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ card }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 //  вернуть все карточки
@@ -22,7 +22,7 @@ const getCards = (req, res) => {
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.status(200).send({ card }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 // поставить лайк карточке
@@ -33,7 +33,7 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .then((card) => res.status(201).send({ card }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 // убрать лайк
