@@ -3,23 +3,26 @@ const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 
 //  создать пользователя
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
   return User.create({ name, about, avatar })
     .then((user) => res.status(201).send({ user }))
     .catch((err) => {
-      res.status(400).send({ message: 'Произошла ошибка' });
-      console.log(err);
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
+      } else {
+        next(err);
+      }
     });
 };
 
 //  вернуть всех ользователей
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(200).send(users);
     })
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
 //  вернуть пользователя по ID
@@ -43,19 +46,45 @@ const getUser = (req, res, next) => {
 };
 
 //  изменить данные пользователя
-const setUserInfo = (req, res) => {
+const setUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
     .then((user) => res.status(200).send({ user }))
-    .catch((err) => res.status(400).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Некорректные данные'));
+      } if (err.name === 'NotFoundError') {
+        next(new NotFoundError('Пользователь не найден'));
+      } if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 //  изменить аватар
-const setAvatar = (req, res) => {
+const setAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
     .then((user) => res.status(200).send({ user }))
-    .catch((err) => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Некорректные данные'));
+      } if (err.name === 'NotFoundError') {
+        next(new NotFoundError('Пользователь не найден'));
+      } if (err.name === 'ValidationError') {
+        next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {
