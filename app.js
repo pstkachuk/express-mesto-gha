@@ -9,9 +9,8 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
-// app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
+app.use((req, res, next) => { // пока так
   req.user = {
     _id: '62f4f2f7b1b39f4320d8e970',
   };
@@ -24,7 +23,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('Путь не найден'));
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb ', {
+mongoose.connect('mongodb://localhost:27017/mestodb ', { // база данных
   useNewUrlParser: true,
 });
 
@@ -35,5 +34,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Пока все нормально');
+  console.log(`Сервер запущен на порте: ${PORT}`);
 });
