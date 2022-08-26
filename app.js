@@ -12,7 +12,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => { // пока так
   req.user = {
-    _id: '62f4f2f7b1b39f4320d8e970',
+    _id: '63090951d8be5b1fb937275e',
+    // _id: '62f4f2f7b1b39f4320d8e970',
   };
   next();
 });
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('Путь не найден'));
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb ', { // база данных
+mongoose.connect('mongodb://localhost:27017/mestodb', { // база данных
   useNewUrlParser: true,
 });
 
