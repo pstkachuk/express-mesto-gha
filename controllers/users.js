@@ -39,11 +39,20 @@ const createUser = (req, res, next) => {
     });
 };
 
-//  вернуть всех ользователей
+//  вернуть всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.send(users);
+    })
+    .catch(next);
+};
+
+// Вернуть текущего пользователя
+const getUserMe = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.send(user);
     })
     .catch(next);
 };
@@ -131,4 +140,5 @@ module.exports = {
   setUserInfo,
   setAvatar,
   login,
+  getUserMe,
 };
