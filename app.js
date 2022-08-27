@@ -2,29 +2,25 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
 const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => { // пока так
-  req.user = {
-    _id: '63090e41cdf2e53ef2717272',
-    // _id: '62f4f2f7b1b39f4320d8e970',
-  };
-  next();
-});
 
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use('/', usersRouter);
-app.use('/', cardsRouter);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardsRouter);
 app.use((req, res, next) => {
   next(new NotFoundError('Путь не найден'));
 });
