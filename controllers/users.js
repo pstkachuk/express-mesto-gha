@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 //  создать пользователя
 const createUser = (req, res, next) => {
@@ -106,10 +108,25 @@ const setAvatar = (req, res, next) => {
     });
 };
 
+//  авторизация пользователя
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token }); //
+    })
+    .catch(() => {
+      next(new UnauthorizedError('Неправильные почта или пароль'));
+    });
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   setUserInfo,
   setAvatar,
+  login,
 };
