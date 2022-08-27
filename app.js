@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
-const { login } = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -21,6 +21,7 @@ app.use((req, res, next) => { // пока так
 });
 
 app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
