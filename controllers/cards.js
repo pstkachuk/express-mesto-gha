@@ -31,18 +31,6 @@ const getCards = (req, res, next) => {
 
 //  удалить карточку
 const deleteCard = (req, res, next) => {
-  // Card.findByIdAndRemove(req.params.cardId)
-  //   .orFail(() => {
-  //     throw new NotFoundError('Карточка не найдена');
-  //   })
-  //   .then((card) => res.send(card))
-  //   .catch((err) => {
-  //     if (err.name === 'CastError') {
-  //       next(new ValidationError('Некорректные данные'));
-  //     } else {
-  //       next(err);
-  //     }
-  //   });
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
