@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
+    email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 }), login);
@@ -29,7 +29,7 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/i),
     email: Joi.string().email().required(),
-    password: Joi.string().min(8).required(),
+    password: Joi.string().required(),
   }),
 }), createUser);
 
