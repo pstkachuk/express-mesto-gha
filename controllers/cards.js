@@ -68,8 +68,6 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Карточка не найдена'));
       } else {
         next(err);
       }
@@ -90,8 +88,6 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Карточка не найдена'));
       } else {
         next(err);
       }

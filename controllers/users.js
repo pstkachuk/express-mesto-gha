@@ -77,8 +77,6 @@ const getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Пользователь не найден'));
       } else {
         next(err);
       }
@@ -96,8 +94,6 @@ const setUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Пользователь не найден'));
       } if (err.name === 'ValidationError') {
         next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
       } else {
@@ -117,8 +113,6 @@ const setAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'NotFoundError') {
-        next(new NotFoundError('Пользователь не найден'));
       } if (err.name === 'ValidationError') {
         next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
       } else {
@@ -138,7 +132,7 @@ const login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
       })
-        .send({ token });
+        .send({ message: 'Авторизация прошла успешно' });
     })
     .catch(() => {
       next(new UnauthorizedError('Неправильные почта или пароль'));
