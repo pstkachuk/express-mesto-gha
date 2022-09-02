@@ -4,7 +4,6 @@ const User = require('../models/user');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -38,7 +37,7 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
-          } if (err.code === 11000) {
+          } else if (err.code === 11000) {
             next(new ConflictError('Пользователь с таким Email уже существует'));
           } else {
             next(err);
@@ -94,7 +93,7 @@ const setUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
       } else {
         next(err);
@@ -113,7 +112,7 @@ const setAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new ValidationError('Некорректные данные'));
-      } if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         next(new ValidationError('Ошибка валидации, проверьте правильность заполнения полей'));
       } else {
         next(err);
@@ -134,9 +133,7 @@ const login = (req, res, next) => {
       })
         .send({ message: 'Авторизация прошла успешно' });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неправильные почта или пароль'));
-    });
+    .catch(next);
 };
 
 module.exports = {
