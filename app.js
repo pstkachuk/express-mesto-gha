@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
@@ -13,9 +14,15 @@ const auth = require('./middlewares/auth');
 const { PORT = 3000 } = process.env;
 const app = express();
 
+mongoose.connect('mongodb://localhost:27017/mestodb', { // база данных
+  useNewUrlParser: true,
+});
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -39,9 +46,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('Путь не найден'));
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb', { // база данных
-  useNewUrlParser: true,
-});
+app.use(errorLogger);
 
 app.use(errors({ message: 'Ошибка валидации. Проверьте вводимые данные' }));
 
